@@ -33,6 +33,7 @@
           lat: <%= @location.latitude %>,
           lng: <%= @location.longitude %>
         };
+        var userIcon = "<%= image_path 'beachflag.png' %>";
 
         var nearbyBuses = <%= raw @buses.to_json %>;
 
@@ -48,7 +49,8 @@
           position: userLatLng,
           map: map,
           animation: google.maps.Animation.DROP,
-          title: 'You Are Here'
+          title: 'You Are Here',
+          icon: userIcon
 
         });
 
@@ -60,8 +62,24 @@
         map: map,
         animation: google.maps.Animation.DROP,
         title: element['ROUTE']
+
       });
-    });
+      var busInfo =
+       '<div id="content">' +
+         '<h2>Bus ' + element['ROUTE'] + ' ' + element['DIRECTION'] + '</h2>' +
+         '<div id="bodyContent">' +
+           '<p>Next stop: ' + element['TIMEPOINT'] + '</p>' +
+         '</div>' +
+       '</div>';
+
+      var busWindow = new google.maps.InfoWindow({
+        content: busInfo
+      });
+
+      google.maps.event.addListener(busMarker, 'click', function(){
+        busWindow.open(map, busMarker);
+      });
+      });
       }
     </script>
 
